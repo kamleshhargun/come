@@ -1,4 +1,4 @@
-# Apex Enterprise ERP System
+# Kone Soft Tech ERP System
 
 A modern, light-themed, high-performance Enterprise Resource Planning (ERP) web application designed for seamless deployment on **GitHub Pages** (or any static hosting) with **Google Apps Script** as a serverless backend and **Google Sheets** as the database.
 
