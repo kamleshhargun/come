@@ -1,5 +1,5 @@
 /* =====================================================
-   APEX ERP - CLIENT API BRIDGE & ROUTING ENGINE
+   Kone ERP - CLIENT API BRIDGE & ROUTING ENGINE
 ===================================================== */
 
 // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP DEPLOYMENT URL
