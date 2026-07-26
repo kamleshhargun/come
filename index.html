@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Enterprise ERP Platform</title>
+  <!-- Google Inter Font & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand">
+      <i class="fa-solid fa-layer-group brand-icon"></i>
+      <span class="brand-name">Apex ERP</span>
+    </div>
+
+    <nav class="nav-menu">
+      <a class="nav-item active" onclick="switchTab('dashboard', this)">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+      <a class="nav-item" onclick="switchTab('scan', this)">
+        <i class="fa-solid fa-barcode"></i> Daily Scan Logs
+      </a>
+      <a class="nav-item" onclick="switchTab('inventory', this)">
+        <i class="fa-solid fa-boxes-stacked"></i> Inventory / Stock
+      </a>
+      <a class="nav-item" onclick="switchTab('labour', this)">
+        <i class="fa-solid fa-scissors"></i> Labour & Cutting
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Layout -->
+  <main class="main-content">
+    
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="page-header-title">
+        <h2 id="page-title">Dashboard Management</h2>
+      </div>
+      <div class="user-profile">
+        <span class="status-badge live"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Live Sync</span>
+        <div class="avatar"><i class="fa-regular fa-user"></i></div>
+      </div>
+    </header>
+
+    <div class="content-body">
+      
+      <!-- DASHBOARD VIEW PANEL -->
+      <section id="view-dashboard" class="view-panel active">
+        <div class="metrics-grid">
+          <div class="card">
+            <span class="metric-title">Today's Pickups</span>
+            <h3 class="metric-value" id="cnt-today-pickup">0</h3>
+            <span class="metric-subtitle">Live Daily Scan</span>
+          </div>
+          <div class="card">
+            <span class="metric-title">Today's Returns</span>
+            <h3 class="metric-value" id="cnt-today-return">0</h3>
+            <span class="metric-subtitle">RTO / DTO Entries</span>
+          </div>
+          <div class="card">
+            <span class="metric-title">Monthly Pickups</span>
+            <h3 class="metric-value" id="cnt-month-pickup">0</h3>
+            <span class="metric-subtitle">Current Month Total</span>
+          </div>
+          <div class="card">
+            <span class="metric-title">Monthly Returns</span>
+            <h3 class="metric-value" id="cnt-month-return">0</h3>
+            <span class="metric-subtitle">Current Month RTO</span>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <h3>Recent Scan Operations</h3>
+        </div>
+
+        <div class="table-card">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>AWB / Tracking</th>
+                <th>Order ID</th>
+                <th>Courier</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-recent-table">
+              <tr><td colspan="6" style="text-align:center;">Loading recent activity...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- DAILY SCAN LOGS VIEW PANEL -->
+      <section id="view-scan" class="view-panel">
+        <div class="card" style="margin-bottom: 24px;">
+          <form onsubmit="saveScanEntry(event)" class="form-grid" style="align-items: flex-end;">
+            <div class="form-group" style="flex:2;">
+              <label>AWB Number / Waybill</label>
+              <input type="text" id="scan-awb-input" class="form-control" placeholder="Scan barcode or type AWB..." required>
+            </div>
+            <div class="form-group">
+              <label>Entry Type</label>
+              <select id="scan-type-select" class="form-control">
+                <option value="Pickup">Pickup</option>
+                <option value="Return">Return</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Submit Scan</button>
+          </form>
+        </div>
+
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="scan-search" class="search-input" placeholder="Search by AWB, Order ID..." onkeyup="filterTable('scan-search', 'scan-table-body')">
+          </div>
+        </div>
+
+        <div class="table-card">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>AWB</th>
+                <th>Order ID</th>
+                <th>Courier</th>
+                <th>Status</th>
+                <th>Customer</th>
+              </tr>
+            </thead>
+            <tbody id="scan-table-body">
+              <tr><td colspan="7" style="text-align:center;">Loading logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- INVENTORY VIEW PANEL -->
+      <section id="view-inventory" class="view-panel">
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="inv-search" class="search-input" placeholder="Search SKU..." onkeyup="filterTable('inv-search', 'inventory-table-body')">
+          </div>
+          <button class="btn btn-primary" onclick="openModal('inv-modal')"><i class="fa-solid fa-boxes-packing"></i> Update Stock</button>
+        </div>
+
+        <div class="table-card">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>SKU Code</th>
+                <th>Opening</th>
+                <th>Inward</th>
+                <th>Sales</th>
+                <th>Returns</th>
+                <th>Current Stock</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+              <tr><td colspan="6" style="text-align:center;">Loading inventory stock...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- LABOUR VIEW PANEL -->
+      <section id="view-labour" class="view-panel">
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="labour-search" class="search-input" placeholder="Search Labour Name, SKU..." onkeyup="filterTable('labour-search', 'labour-table-body')">
+          </div>
+        </div>
+
+        <div class="table-card">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Labour Name</th>
+                <th>SKU</th>
+                <th>Issued Qty</th>
+                <th>Received Qty</th>
+                <th>Balance Qty</th>
+                <th>Rate</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody id="labour-table-body">
+              <tr><td colspan="8" style="text-align:center;">Loading cutting ledger...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Stock Update Modal -->
+  <div id="inv-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Update Inventory Transaction</h3>
+        <button class="close-btn" onclick="closeModal('inv-modal')">&times;</button>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label>SKU Code</label>
+        <input type="text" id="inv-sku" class="form-control" placeholder="e.g. SHIRT-COTTON-M">
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label>Transaction Type</label>
+        <select id="inv-type" class="form-control">
+          <option value="Inward">Inward (Stock In)</option>
+          <option value="Sales">Sales (Stock Out)</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:20px;">
+        <label>Quantity</label>
+        <input type="number" id="inv-qty" class="form-control" value="1" min="1">
+      </div>
+      <button class="btn btn-primary" style="width: 100%;" onclick="saveInventoryUpdate()">Save Stock Entry</button>
+    </div>
+  </div>
+
+  <!-- Loading Overlay Spinner -->
+  <div id="loader" class="loader-overlay hidden">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
