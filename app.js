@@ -3,7 +3,7 @@
 ===================================================== */
 
 // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP DEPLOYMENT URL
-const APPS_SCRIPT_URL = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2zrQPJ7yE0xMIeHXtOIbQFAKWIWEWP6FoymFj-QIOMNwsd0-v7dzmzj7hPbb25Iw/exec";
 
 let currentActiveTab = "dashboard";
 const localDataCache = {};
